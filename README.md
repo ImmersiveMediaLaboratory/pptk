@@ -1,6 +1,49 @@
 # Info
 The pptk library which is provided via the *Python Package Index* supports Python versions <=3.7. In order to work on higher versions pptk has to be built from source. Additionally, some files have to adapted to work on *Ubuntu 22* with *oneTBB* release 2021.7.0. For the updated installation guide see the **Install** section. The following files had to be adapted:
 
+**pptk/kdtree/src/kdtree-impl.h**
+```python
+# old
+class BuildTask : public tbb::task {...}
+# new
+class BuildTask : public tbb::task_group {...}
+
+# old
+tbb::task* execute() {...}
+# new 
+tbb::task_group* execute() {...}
+
+# Added after BuildTask<T, dim>* left_task = NULL;
+tbb::task_group tg
+
+# old
+left_task = new (tbb::task::allocate_child()) BuildTask<T, dim>(current_node->left, begin_index_, split_index, indices_, node_box_,points_, num_points_, build_params_);
+# new
+left_task = BuildTask<T, dim>(current_node->left, begin_index_, split_index, indices_, node_box_,points_, num_points_, build_params_);
+tg.run(left_task);
+
+# old
+right_task = new (tbb::task::allocate_child()) BuildTask<T, dim>(current_node->right, split_index, end_index_, indices_, node_box_,points_, num_points_, build_params_);
+# new
+right_task = BuildTask<T, dim>(current_node->right, split_index, end_index_, indices_, node_box_, points_, num_points_, build_params_);
+tg.run(right_task);
+
+# old
+if (left_task && right_task) {
+  set_ref_count(3);
+  spawn(*right_task);
+  spawn_and_wait_for_all(*left_task);
+} else if (right_task) {  // left empty
+  set_ref_count(2);
+  spawn_and_wait_for_all(*right_task);
+} else {  // right empty
+  set_ref_count(2);
+  spawn_and_wait_for_all(*left_task);
+}
+#new
+tg.wait();
+```
+
 # pptk - Point Processing Toolkit
 
 Copyright (C) 2011-2018 HERE Europe B.V.
