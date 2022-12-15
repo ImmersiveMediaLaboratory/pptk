@@ -40,8 +40,21 @@ if (left_task && right_task) {
   set_ref_count(2);
   spawn_and_wait_for_all(*left_task);
 }
-#new
+# new
 tg.wait();
+
+# old
+BuildTask<T, dim>& root_task = *new (tbb::task::allocate_root()) BuildTask<T, dim>(root, 0, (int)num_valid_points, indices, bounding_box, points, num_points, build_params);
+# new 
+BuildTask<T, dim>& root_task = *new BuildTask<T, dim>(root, 0, (int)num_valid_points, indices, bounding_box, points, num_points, build_params);
+```
+
+**pptk/processing/estimate_normals/estimate_normals.cpp**
+```python
+# old
+tbb::task_scheduler_init(1);
+# new
+tbb::task_arena(1);
 ```
 
 # pptk - Point Processing Toolkit
