@@ -16,7 +16,7 @@
 #include "tbb/parallel_for.h"
 #include "tbb/scalable_allocator.h"
 #include "tbb/task.h"
-#include "tbb/task_scheduler_init.h"
+//#include "tbb/task_scheduler_init.h"
 inline void* Allocate(size_t size) { return scalable_malloc(size); }
 inline void Free(void* ptr) { return scalable_free(ptr); }
 #else
@@ -628,7 +628,7 @@ void SerializeHelper(std::vector<SmallNode<T> >& buf, int node_index,
 
 #ifdef USE_TBB
 template <typename T, int dim>
-class BuildTask : public tbb::task {
+class BuildTask : public tbb::task_group {//tbb::task {
  public:
   typedef typename Accumulator<T>::Type DistT;
   typedef Node<T> NodeT;
@@ -647,7 +647,7 @@ class BuildTask : public tbb::task {
 
   NodeT* get_node() const { return node_; }
 
-  tbb::task* execute() {
+  tbb::task_group* execute() {//tbb::task* execute() {
     // assume node_ will not be a leaf
     // and that node_ has already been empty-trimmed
     int node_size = end_index_ - begin_index_;
@@ -671,23 +671,31 @@ class BuildTask : public tbb::task {
 
       // create left task
       BuildTask<T, dim>* left_task = NULL;
+      // ADDED
+      tbb::task_group tg; 
+      
       if (split_index > begin_index_) {
-        left_task = new (tbb::task::allocate_child()) BuildTask<T, dim>(
-            current_node->left, begin_index_, split_index, indices_, node_box_,
-            points_, num_points_, build_params_);
+        left_task = BuildTask<T, dim>(current_node->left, begin_index_, split_index, indices_, node_box_,points_, num_points_, build_params_);
+      	tg.run(left_task);
+        //left_task = new (tbb::task::allocate_child()) BuildTask<T, dim>(
+        //    current_node->left, begin_index_, split_index, indices_, node_box_,
+        //    points_, num_points_, build_params_);
         left_task->node_box_.max(split_dim) = split_value;
       }
 
       // create right task
       BuildTask<T, dim>* right_task = NULL;
       if (end_index_ > split_index) {
-        right_task = new (tbb::task::allocate_child()) BuildTask<T, dim>(
-            current_node->right, split_index, end_index_, indices_, node_box_,
-            points_, num_points_, build_params_);
+        right_task = BuildTask<T, dim>(current_node->right, split_index, end_index_, indices_, node_box_, points_, num_points_, build_params_);
+      	tg.run(right_task);
+        //right_task = new (tbb::task::allocate_child()) BuildTask<T, dim>(
+        //    current_node->right, split_index, end_index_, indices_, node_box_,
+        //    points_, num_points_, build_params_);
         right_task->node_box_.min(split_dim) = split_value;
       }
 
       // spawn tasks
+      /*
       if (left_task && right_task) {
         set_ref_count(3);
         spawn(*right_task);
@@ -699,6 +707,8 @@ class BuildTask : public tbb::task {
         set_ref_count(2);
         spawn_and_wait_for_all(*left_task);
       }
+      */
+      tg.wait();
 
       return NULL;
     }
@@ -788,11 +798,12 @@ void BuildTree(Node<T>*& root, Box<T, dim>& bounding_box,
                                         bounding_box, points, num_points,
                                         build_params);
   } else {
-    BuildTask<T, dim>& root_task =
-        *new (tbb::task::allocate_root())
-            BuildTask<T, dim>(root, 0, (int)num_valid_points, indices,
-                              bounding_box, points, num_points, build_params);
-    tbb::task::spawn_root_and_wait(root_task);
+    //tbb::task_group tg;
+    BuildTask<T, dim>& root_task = *new BuildTask<T, dim>(root, 0, (int)num_valid_points, indices, bounding_box, points, num_points, build_params);
+    //tg.run(root_task);
+    //tg.wait();
+    //BuildTask<T, dim>& root_task = *new (tbb::task::allocate_root()) BuildTask<T, dim>(root, 0, (int)num_valid_points, indices, bounding_box, points, num_points, build_params);
+    //tbb::task::spawn_root_and_wait(root_task);
   }
 #else
   root = RecursiveBuildHelper<T, dim>(0, (int)num_valid_points, indices,

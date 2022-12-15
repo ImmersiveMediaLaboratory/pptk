@@ -1,3 +1,6 @@
+# Info
+The pptk library which is provided via the *Python Package Index* supports Python versions <=3.7. In order to work on higher versions pptk has to be built from source. Additionally, some files have to adapted to work on *Ubuntu 22* with *oneTBB* release 2021.7.0. For the updated installation guide see the **Install** section. The following files had to be adapted:
+
 # pptk - Point Processing Toolkit
 
 Copyright (C) 2011-2018 HERE Europe B.V.
