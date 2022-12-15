@@ -170,10 +170,14 @@ values for the CMake cache variables listed above. (e.g. see CMakeCache.win.txt)
 3. Type the following...
 
 ```
->> cd <build_folder>
->> cmake -G "NMake Makefiles" <source_folder>
->> nmake
+>> mkdir build
+>> cd build
+>> cmake ..
+>> make
 >> python setup.py bdist_wheel
 >> pip install dist\<.whl file>
 ```
+  
+**Info**:
+- Remove the **options** tag and the variable **wheel_tags** from the setup.py.
 
