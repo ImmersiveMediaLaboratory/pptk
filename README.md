@@ -146,7 +146,7 @@ Listed are versions of libraries used to develop pptk, though earlier versions
 of these libraries may also work.
 
 * Ubuntu 22.4.1 LTS
-* [QT](https://www.qt.io/) 5.4
+* [QT](https://wiki.qt.io/Building_Qt_5_from_Git#Getting_the_source_code) 5.4
 * [oneTBB](https://www.threadingbuildingblocks.org/) 2021.7.0
 * [Eigen](http://eigen.tuxfamily.org) 3.4.0
 * [Python](https://www.python.org/) 3.10
