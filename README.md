@@ -1,5 +1,5 @@
 # Info
-The pptk library which is provided via the *Python Package Index* supports Python versions <=3.7. In order to work on higher versions pptk has to be built from source. Additionally, some files have to adapted to work on *Ubuntu 22* with *oneTBB* release 2021.7.0. For the updated installation guide see the **Install** section. The following files had to be adapted:
+The pptk library which is provided via the *Python Package Index* supports Python versions <=3.7. In order to work on higher versions pptk has to be built from source. Additionally, some files have to adapted to work on *Ubuntu 22.4.1 LTS* with *oneTBB* release 2021.7.0. For the updated installation guide see the **Install** section. The following files had to be adapted:
 
 **pptk/kdtree/src/kdtree-impl.h**
 ```python
@@ -91,13 +91,7 @@ the [LICENSE](LICENSE) in the root applies to all content in this repository.
 
 ## Install
 
-One can either install pptk directly from PyPI
-
-```
->> pip install pptk
-```
-
-or from the .whl file that results from [building pptk from source](#build).
+Install pptk from the .whl file that results from [building pptk from source](#build).
 
 ```
 >> pip install <.whl file>
@@ -134,8 +128,6 @@ user to manually prepare [dependencies](#requirements) and record their paths
 in the following CMake cache variables.
 
 * `Numpy_INCLUDE_DIR`
-* `PYTHON_INCLUDE_DIR`
-* `PYTHON_LIBRARY`
 * `Eigen_INCLUDE_DIR`
 * `TBB_INCLUDE_DIR`
 * `TBB_tbb_LIBRARY`
@@ -153,11 +145,12 @@ or provide an initial CMakeCache.txt in the target build folder
 Listed are versions of libraries used to develop pptk, though earlier versions
 of these libraries may also work.
 
+* Ubuntu 22.4.1 LTS
 * [QT](https://www.qt.io/) 5.4
-* [TBB](https://www.threadingbuildingblocks.org/) 4.3
+* [oneTBB](https://www.threadingbuildingblocks.org/) 2021.7.0
 * [Eigen](http://eigen.tuxfamily.org) 3.2.9
-* [Python](https://www.python.org/) 2.7+ or 3.6+
-* [Numpy](http://www.numpy.org/) 1.13
+* [Python](https://www.python.org/) 3.10
+* [Numpy](http://www.numpy.org/) 1.23.5
 
 ##### Windows
 
