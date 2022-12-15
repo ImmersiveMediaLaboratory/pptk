@@ -158,8 +158,6 @@ sudo apt update
 sudo apt install patchelf
 ```
 
-##### Windows
-
 1. Create an empty build folder
 
 ```
@@ -179,10 +177,3 @@ values for the CMake cache variables listed above. (e.g. see CMakeCache.win.txt)
 >> pip install dist\<.whl file>
 ```
 
-##### Linux
-
-Similar to building on Windows.
-
-##### Mac
-
-Similar to building on Windows.
