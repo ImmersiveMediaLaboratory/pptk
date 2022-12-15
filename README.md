@@ -148,9 +148,15 @@ of these libraries may also work.
 * Ubuntu 22.4.1 LTS
 * [QT](https://www.qt.io/) 5.4
 * [oneTBB](https://www.threadingbuildingblocks.org/) 2021.7.0
-* [Eigen](http://eigen.tuxfamily.org) 3.2.9
+* [Eigen](http://eigen.tuxfamily.org) 3.4.0
 * [Python](https://www.python.org/) 3.10
 * [Numpy](http://www.numpy.org/) 1.23.5
+
+Additionally install **Patchelf**:
+```
+sudo apt update
+sudo apt install patchelf
+```
 
 ##### Windows
 
