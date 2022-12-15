@@ -180,4 +180,5 @@ values for the CMake cache variables listed above. (e.g. see CMakeCache.win.txt)
   
 **Info**:
 - Remove the **options** tag and the variable **wheel_tags** from the setup.py.
+- During the make process, copying errors will appear. Ignore them.
 
